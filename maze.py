@@ -3,8 +3,10 @@
 class Cell(object):
     """Abstraction: Collects together what we know about a cell in a maze
 
-       A direction is true if we'd hit a wall walking in that way.
-       Content is storage for what we find at this cell.
+       instance.[northwall, eastwall, southwall, westwall]: True if we'd
+       hit a wall walking in that direction.
+
+       instance.content: storage for what's at this cell.
     """
     # Implementation details: NONE
 
@@ -38,7 +40,18 @@ class Cell(object):
 class Maze(object):
     """Abstraction: A maze is a 2-dimensional grid of cells with a width and a
        height.  It also has designated start and goal locations either in or
-       on the edge of the grid."""
+       on the edge of the grid.
+       
+       self.height: number of rows in the city grid
+       self.width: number of columns in the city grid
+
+       self.grid: a 2D array of cells
+
+       self.start: where we start in the grid
+       self.goal: where we find the goal in the grid
+
+       Each interesting method contains its own docstring explaining its interface.
+       """
     # Implementation details: The grid is two columns and two rows bigger than
     # its reported width and height.  This is so that we have an explicit border
     # around the entire maze where we can put the start and/or goal locations,
@@ -133,13 +146,11 @@ class Maze(object):
             self.grid[0][i].southwall = self.grid[1][i].northwall
             self.grid[self.height+1][i].northwall = self.grid[self.height][i].southwall
 
-
     def __contains__(self, pt):
         """True if pt inside maze, not on a border"""
         row, col = pt
         return (row > 0 and row < self.width + 1 and
                 col > 0 and col < self.height + 1)
-
 
     def __str_row(self, row, south_border=False):
         # Hidden helper function for __str__.  It works by having each cell
@@ -198,7 +209,6 @@ class Maze(object):
 
         print(self.__str__())
 
-
     def reset(self):
         """Resets all cell contents to their original state"""
         for i in range(self.height + 2):
@@ -209,15 +219,59 @@ class Maze(object):
         if self.goal != (-1, -1):
             self.grid[self.goal[0]][self.goal[1]].content = 'g'
 
+    def mark(self, location, character):
+        """Given a location, put the character at that location
+           in the maze."""
+        row, col = location
+        self.grid[row][col].content = character
+
+    def get_mark(self, location):
+        """Return the contents of the specified location in the maze"""
+        row, col = location
+        return self.grid[row][col].content
+    
+    def possible_moves(self, location, visited_character):
+        """Given a location and the character that marks previously
+           visted locations, return a list of possible moves from
+           this location (i.e., ones that don't hit a wall or return
+           you to a previously visited location)."""
+        row, col = location
+        moves = []   # list of possible moves
+
+        # Check if we can move North
+        if not self.grid[row][col].northwall \
+        and self.grid[row-1][col].content != visited_character:
+            moves.append('n')
+
+        # Check if we can move South
+        if not self.grid[row][col].southwall \
+        and self.grid[row+1][col].content != visited_character:
+            moves.append('s')
+
+        # Check if we can move East
+        if not self.grid[row][col].eastwall \
+        and self.grid[row][col+1].content != visited_character:
+            moves.append('e')
+
+        # Check if we can move West
+        if not self.grid[row][col].westwall \
+        and self.grid[row][col-1].content != visited_character:
+            moves.append('w')
+
+        return moves
+
     def move(self, location, direction):
         """Given a location and a direction, return an updated location
            corresponding to that move, if it is a possible move in the maze
            (i.e., the move isn't blocked by a wall).
 
-           ASSUMPTION: It is up to the caller to guarantee that the location is
-           within the grid or its borders."""
+           This routine actually makes the move, i.e.,  it moves the
+           grid contents from input location to the returned location.
+
+           ASSUMPTION: It is up to the caller to guarantee that the location
+           is within the grid or its borders."""
         
-        # Pull apart location and direction
+        # Pull apart location and use only the first letter of the direction
         row, col = location
         m = direction[0].lower()
 
@@ -239,6 +293,33 @@ class Maze(object):
         self.grid[row][col].content = c
 
         return (row, col)
+    
+    def simulate_move(self, location, direction):
+        """Given a location and a direction, return the location
+           corresponding to that move, if it is a possible move
+           in the maze (i.e., the move isn't blocked by a wall).
+
+           This routine does NOT make the move.
+
+           ASSUMPTION: It is up to the caller to guarantee that the location
+           is within the grid or its borders."""
+        
+        # Pull apart location and use only the first letter of the direction
+        row, col = location
+        m = direction[0].lower()
+
+        # For each move possibility, make sure there's no wall there
+        if m == 'n' and not self.grid[row][col].northwall:
+            row -= 1
+        if m == 's' and not self.grid[row][col].southwall:
+            row += 1
+        if m == 'e' and not self.grid[row][col].eastwall:
+            col += 1
+        if m == 'w' and not self.grid[row][col].westwall:
+            col -= 1
+        
+        return (row, col)
+
 
 
 # Test mazes -- start/goal points stated as (row,col), where

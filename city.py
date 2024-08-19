@@ -18,23 +18,23 @@ class CitySqGrid(maze.Maze):
        index the cells in a grid.  See class `Cell` for more information about
        the city cells.
 
-       instance.move(location, direction): Given a location and a direction to
-       move, this method moves the contents of the input location to the new
-       location in the specified direction, if the direction doesn't hit a wall.
-       If direction is a wall, no move is made.  NOTE: It is up to the caller to
+       move(location, direction): Given a location and a direction to move,
+       this method moves the contents of the input location to the new location
+       n the specified direction, if the direction doesn't hit a wall. If
+       direction is a wall, no move is made.  NOTE: It is up to the caller to
        guarantee that there's some character to move at location and that the
        input location is within the city grid.
 
-       instance.reset(): Resets all the city's state to the state when this
+       reset(): Resets all the city's state to the state when this
        instance was first created.
 
-       instance.__contains__(pt): Allows us to use the Python `in` syntax to
+       __contains__(pt): Allows us to use the Python `in` syntax to
        check if a location `pt` is a location in your city grid.
 
-       instance.__str__(): Converts your city object into a string, which when
+       __str__(): Converts your city object into a string, which when
        printed is an ASCII representation of what your city looks like.
 
-       instance.print(): Same as `__str__`, except that it does the print too.
+       print(): Same as `__str__`, except that it does the print too.
     """
     # Implementation details:  It only builds cities where there is an
     # intersection at the exact middle of the city.  This means that the
@@ -75,8 +75,16 @@ class CitySqGrid(maze.Maze):
                 self.grid[i][j].content = '#'
 
         # Change 's' to a dog
-        self.grid[size][size].content = character
+        self.character = character
+        self.grid[size][size].content = self.character
 
+    def reset(self):
+        """Resets all cell contents to their original state"""
+        maze.Maze.reset(self)
+
+        # Reset the start point with our character
+        row, col = self.start
+        self.grid[row][col].content = self.character
 
 def main():
     # Just a testing routine

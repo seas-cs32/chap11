@@ -1,81 +1,51 @@
-### chap11/dogwalk.py -- Self-avoiding random walk simulation
+### chap11/dogwalk.py -- Self-avoiding random dog walk
 from city import CitySqGrid
 import random
 
-# Our faithful dog
+# Our faithful dog and the scent he smells
 Cosmo = '\N{DOG FACE}'
+EXPLORED = '\033[34m*\033[0m' # blue *
 
-def sim(my_city, trials=1):
-    """Runs {trials} trials of a self-avoiding random walk in {my_city}.  It
-       returns the number of times the dog hit a dead end."""
-    dead_ends = 0
-    cg = my_city.grid
+def dogwalk(my_city):
+    """Given a city of type CitySqGrid, take a random walk
+       and return True if goal successfully met. The
+       successful path is marked in the city object."""
+    # Set the current state
+    cur_loc = my_city.start
 
-    for t in range(trials):
-        loc = my_city.start
-        row, col = loc
-        my_city.reset()
+    while cur_loc in my_city:
+        # Where to? Well, what steps are possible?
+        moves = my_city.possible_moves(cur_loc, EXPLORED)
+        # print(f'DEBUG: loc = {loc}; moves = {moves}')
 
-        while loc in my_city:
-            # Leave a scent at current loc
-            cg[row][col].content = '*'
+        if len(moves) == 0:
+            return False   # dead end!
 
-            # Build list of available moves.  A move is available if there's not
-            # a wall in that direction and no scent there.
-            moves = []
-            if not cg[row][col].northwall and cg[row-1][col].content != '*':
-                moves.append('n')
-            if not cg[row][col].southwall and cg[row+1][col].content != '*':
-                moves.append('s')
-            if not cg[row][col].eastwall and cg[row][col+1].content != '*':
-                moves.append('e')
-            if not cg[row][col].westwall and cg[row][col-1].content != '*':
-                moves.append('w')
+        # Randomly pick a possible move and make it
+        a_move = random.choice(moves)
+        next_loc = my_city.move(cur_loc, a_move)
 
-            #print(f'DEBUG: t = {t}; loc = {loc}; moves = {moves}')
+        # Leave a scent at current loc
+        my_city.mark(cur_loc, EXPLORED)
 
-            if len(moves) == 0:
-                dead_ends += 1
-                break
+        # Update current state
+        cur_loc = next_loc
 
-            # Move to a random available choice
-            m = random.choice(moves)
-            if m == 'n':
-                row -= 1
-            if m == 's':
-                row += 1
-            if m == 'e':
-                col += 1
-            if m == 'w':
-                col -= 1
-            cg[row][col].content = Cosmo
-            loc = (row, col)
-
-        print(my_city)
-
-    return dead_ends
-
+    # The random path was successful!
+    return True
 
 def main():
-    print('\nBuilding a city with a square grid pattern')
-    not_Boston = CitySqGrid(4, Cosmo)
-    print(not_Boston)
-
-    # Uncomment lines 71-75 if you want to see one random
-    # walk, or lines 78-80 if you want to run a random-walk
-    # simulation.
+    print('\nBuilding a city with a 4x4 square grid')
+    nyc = CitySqGrid(4, Cosmo)
+    print(nyc)
 
     # Cosmo walks himself
-    dead_ends = sim(not_Boston)
-    if dead_ends == 1:
-        print(f'Cosmo hit a dead-end.')
-    else:
+    success = dogwalk(nyc)
+    print(nyc)
+    if success:
         print(f'Cosmo is frolicing in the fields!')
-
-    # Run a self-avoiding random walk simulation
-    # trials = 20
-    # dead_ends = sim(not_Boston, trials)
-    # print(f'{100 * dead_ends // trials}% dead ends')
+    else:
+        print(f'Cosmo hit a dead-end.')
 
 if __name__ == '__main__':
     main()

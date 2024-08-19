@@ -6,47 +6,38 @@ EXPLORED = '\033[34m*\033[0m' # blue *
 FRONTIER = '\033[32mf\033[0m' # green f
 
 def search(my_map):
-    g = my_map.grid
+    # Set the current state and mark the map location explored
+    cur_loc = my_map.start
+    my_map.mark(cur_loc, EXPLORED)
+
+    # Build a list on which to keep known but unexplored locations
     frontier = []
 
-    loc = my_map.start
-    row, col = loc
-    g[row][col].content = EXPLORED
+    while cur_loc != my_map.goal:    # search loop
+        # What unexplored next steps are possible?
+        moves = my_map.possible_moves(cur_loc, EXPLORED)
 
-    while loc != my_map.goal:
-        # Build list of unexplored locations. A move is possible if there's not
-        # a wall in that direction. We also add unexplored locations only once.
-        if not g[row][col].northwall and \
-            g[row-1][col].content != EXPLORED and \
-            (row-1,col) not in frontier:
-            frontier.append((row-1, col))
-            g[row-1][col].content = FRONTIER
-        if not g[row][col].southwall and \
-            g[row+1][col].content != EXPLORED and \
-            (row+1,col) not in frontier:
-            frontier.append((row+1, col))
-            g[row+1][col].content = FRONTIER
-        if not g[row][col].eastwall and \
-            g[row][col+1].content != EXPLORED and \
-            (row,col+1) not in frontier:
-            frontier.append((row, col+1))
-            g[row][col+1].content = FRONTIER
-        if not g[row][col].westwall and \
-            g[row][col-1].content != EXPLORED and \
-            (row,col-1) not in frontier:
-            frontier.append((row, col-1))
-            g[row][col-1].content = FRONTIER
+        # Add moves not already on the frontier to the frontier
+        for a_move in moves:
+            loc = my_map.simulate_move(cur_loc, a_move)
+            if loc not in frontier:
+                frontier.append(loc)
+                my_map.mark(loc, FRONTIER)
 
-        # my_map.print() # uncomment to see the frontier grow
+        # DEBUG: Uncomment to watch the frontier grow
+        # print(my_map)
+        # input('Ready to move on? ')
 
         if len(frontier) == 0:
             print('No solution')
             return
 
         # Choose a location from the frontier as next to explore
-        loc = frontier.pop()
-        row, col = loc
-        g[row][col].content = EXPLORED
+        next_loc = frontier.pop()
+        my_map.mark(next_loc, EXPLORED)
+
+        # Update current state
+        cur_loc = next_loc
 
     print('Found a solution')
     my_map.print()

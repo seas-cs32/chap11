@@ -6,7 +6,7 @@ EXPLORED = '\033[34m*\033[0m' # blue *
 FRONTIER = '\033[32mf\033[0m' # green f
 
 # Keep track of the tree of explored paths
-class TreeNode():
+class TreeNote():
     def __init__(self, state, parent, action):
         self.state = state    # current location 
         self.parent = parent  # previous note in path
@@ -14,63 +14,49 @@ class TreeNode():
 
 
 def search(my_map):
-    g = my_map.grid
+    # Set the current state and mark the map location explored
+    cur_loc = my_map.start
+    my_map.mark(cur_loc, EXPLORED)
+    cur_note = TreeNote(cur_loc, None, None)
+
+    # Build a list on which to keep known but unexplored locations
     frontier = []
 
-    # Initialize the variables used in the while-loop
-    # with values from the start location
-    loc = my_map.start
-    row, col = loc
-    g[row][col].content = EXPLORED
-    cur_node = TreeNode(loc, None, None)
+    while cur_loc != my_map.goal:    # search loop
+        # What unexplored next steps are possible?
+        moves = my_map.possible_moves(cur_loc, EXPLORED)
 
-    # Search loop
-    while loc != my_map.goal:
-        # Build list of unexplored locations. A move is possible if there's not
-        # a wall in that direction. We also add unexplored locations only once.
-        if not g[row][col].northwall and g[row-1][col].content != EXPLORED and \
-            g[row-1][col].content != FRONTIER:
-            new_loc = (row-1, col)
-            new_node = TreeNode(new_loc, cur_node, 'north')
-            frontier.append(new_node)
-            g[row-1][col].content = FRONTIER
-        if not g[row][col].southwall and g[row+1][col].content != EXPLORED and \
-            g[row+1][col].content != FRONTIER:
-            new_loc = (row+1, col)
-            new_node = TreeNode(new_loc, cur_node, 'south')
-            frontier.append(new_node)
-            g[row+1][col].content = FRONTIER
-        if not g[row][col].eastwall and g[row][col+1].content != EXPLORED and \
-            g[row][col+1].content != FRONTIER:
-            new_loc = (row, col+1)
-            new_node = TreeNode(new_loc, cur_node, 'east')
-            frontier.append(new_node)
-            g[row][col+1].content = FRONTIER
-        if not g[row][col].westwall and g[row][col-1].content != EXPLORED and \
-            g[row][col-1].content != FRONTIER:
-            new_loc = (row, col-1)
-            new_node = TreeNode(new_loc, cur_node, 'west')
-            frontier.append(new_node)
-            g[row][col-1].content = FRONTIER
+        # Add moves not already on the frontier to the frontier
+        for a_move in moves:
+            loc = my_map.simulate_move(cur_loc, a_move)
+            if loc not in frontier:
+                new_note = TreeNote(loc, cur_note, a_move)
+                frontier.append(new_note)
+                my_map.mark(loc, FRONTIER)
 
-        # my_map.print() # uncomment to see the frontier grow
+        # DEBUG: Uncomment to watch the frontier grow
+        # print(my_map)
+        # input('Ready to move on? ')
 
         if len(frontier) == 0:
             print('No solution')
             return
 
-        # Choose a location from the frontier as next to explore
-        cur_node = frontier.pop(0)
-        loc = cur_node.state
-        row, col = loc
-        g[row][col].content = EXPLORED
+        # Choose a note from the frontier as next to explore
+        next_note = frontier.pop(0)
+        next_loc = next_note.state
+        my_map.mark(next_loc, EXPLORED)
 
-    # Follow the parent links from cur_node to create
+        # Update current state
+        cur_note = next_note
+        cur_loc = next_loc
+
+    # Follow the parent links from cur_note to create
     # the actual driving directions
-    ddirections = [cur_node]
-    while cur_node.parent:
-        cur_node = cur_node.parent
-        ddirections.insert(0, cur_node)
+    ddirections = [cur_note]
+    while cur_note.parent:
+        cur_note = cur_note.parent
+        ddirections.insert(0, cur_note)
 
     # Print out the driving directions
     print('## Solution ##')
