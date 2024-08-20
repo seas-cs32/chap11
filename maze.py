@@ -86,12 +86,12 @@ class Maze(object):
         # The start and goal points can never be one of the 4 border corners.
         if p == (-1, -1):
             return
-        assert(p[0] >= 0 and p[0] < self.height + 2)
-        assert(p[1] >= 0 and p[1] < self.width + 2)
-        assert(p != (0, 0) and
-               p != (0, self.height + 1) and
-               p != (self.width + 1, 0) and 
-               p != (self.width + 1, self.height + 1))
+        assert p[0] >= 0 and p[0] < self.height + 2
+        assert p[1] >= 0 and p[1] < self.width + 2
+        assert p != (0, 0) and \
+               p != (0, self.height + 1) and \
+               p != (self.width + 1, 0) and \
+               p != (self.width + 1, self.height + 1)
 
     def __init__(self, cells, endpts):
         # Initializes the instance variables: grid, height, width
@@ -100,7 +100,7 @@ class Maze(object):
         # endpts: string describing the start and goal points as (row,col) tuples
 
         # No empty configuration strings
-        assert(cells != '' and endpts != '')
+        assert cells != '' and endpts != ''
 
         # Compute the grid's height and width from cells' configuration data
         rows = cells.splitlines()
@@ -109,7 +109,7 @@ class Maze(object):
 
         # Make sure all rows are the same length
         for r in rows[1:self.height]:
-            assert(len(r) == self.width)
+            assert len(r) == self.width
 
         # Build grid with walls info in each cell
         self.grid = []

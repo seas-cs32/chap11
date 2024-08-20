@@ -47,9 +47,9 @@ class CitySqGrid(maze.Maze):
 
         # Sanity checks
         if size & 0x1 != 0:
-            assert('CitySqGrid size must be an even number')
+            assert False, 'CitySqGrid size must be an even number'
         if size < 2 or size > 20:
-            assert('CitySqGrid size must be between 2 and 20 buildings')
+            assert False, 'CitySqGrid size must be between 2 and 20 buildings'
 
         # Create the string that describes the configuration.  The actual
         # configuration written out is one of the test cases in maze.py.
