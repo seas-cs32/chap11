@@ -36,6 +36,8 @@ def search(my_map):
 
         # DEBUG: Uncomment to watch the frontier grow
         # print(my_map)
+        # print(f'DEBUG: cur_loc = {cur_loc}; moves = {moves}')
+        # print(f'DEBUG: frontier = {[note.state for note in frontier]}')
         # input('Ready to move on? ')
 
         if len(frontier) == 0:
@@ -54,7 +56,7 @@ def search(my_map):
     # Follow the parent links from cur_note to create
     # the actual driving directions
     ddirections = [cur_note]
-    while cur_note.parent:
+    while cur_note.parent:  # while parent exists
         cur_note = cur_note.parent
         ddirections.insert(0, cur_note)
 

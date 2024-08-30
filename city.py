@@ -2,21 +2,24 @@
 import maze
 
 class CitySqGrid(maze.Maze):
-    """Abstraction: A CitySqGrid object represents a grid-like layout of a city
-       with an even number of blocks in the north-south direction as it has in
-       the east-west direction.  When an instance is created, your character is
-       placed at the intersection in the exact center of the city.
+    """Abstraction: A CitySqGrid object represents a grid-like layout of
+       a city with an even number of blocks in the north-south direction
+       as it has in the east-west direction.  When an instance is created,
+       your character is placed at the intersection in the exact center
+       of the city.
 
        Interface attributes:
 
-       instance.start: Starting location for your character in the your city.
-       Locations are (row,col) tuples that specify a coordinate within the city
-       grid.  You should only read this data attribute.
+       instance.start: Starting location for your character in the your
+       city.  Locations are (x,y) tuples that specify a coordinate within
+       the city grid.  You should only read this data attribute.
 
        instance.grid: A 2-dimensional array of cells containing information
-       about the city grid and whatever you might find at each cell.  Locations
-       index the cells in a grid.  See class `Cell` for more information about
-       the city cells.
+       about the city grid and whatever you might find at each cell.
+       Locations index the cells in a grid.  The location (0,0) is the
+       lower left border corner of the city.  A location tuple acts like
+       an (x,y) coordinate in a Cartesian plane.  See class `Cell` for more
+       information about the city cells.
 
        move(location, direction): Given a location and a direction to move,
        this method moves the contents of the input location to the new location
@@ -34,7 +37,7 @@ class CitySqGrid(maze.Maze):
        __str__(): Converts your city object into a string, which when
        printed is an ASCII representation of what your city looks like.
 
-       print(): Same as `__str__`, except that it does the print too.
+       print(): Uses `__str__`.
     """
     # Implementation details:  It only builds cities where there is an
     # intersection at the exact middle of the city.  This means that the
@@ -57,13 +60,13 @@ class CitySqGrid(maze.Maze):
         row2 = 'a0' * (size - 1) + 'a\n'
         # Finally, put it all together with no trailing newline
         config = (row1 + row2) * (size - 1) + row1[0:-1]
-        #DEBUG print(config)
+        # print(f'DEBUG: config = {config}')
 
         # Put start in city center, which is just the point (size,size)
         # when we double size to make maze rows and columns!  We don't
         # care about the goal point in this application.
-        endpts = f'({size},{size}) (-1,-1)'
-        #DEBUG print(endpts)
+        endpts = f'({size},{size}) {str(maze.NO_LOC).replace(" ","")}'
+        # print(f'DEBUG: endpts = {endpts}')
         
         maze.Maze.__init__(self, config, endpts)
 
@@ -72,19 +75,18 @@ class CitySqGrid(maze.Maze):
         # once we start the dog on its random walk.
         for i in range(1, size * 2, 2):
             for j in range(1, size * 2, 2):
-                self.grid[i][j].content = '#'
+                self.mark((i, j), '#')
 
         # Change 's' to a dog
         self.character = character
-        self.grid[size][size].content = self.character
+        self.mark((size, size), self.character)
 
     def reset(self):
         """Resets all cell contents to their original state"""
         maze.Maze.reset(self)
 
         # Reset the start point with our character
-        row, col = self.start
-        self.grid[row][col].content = self.character
+        self.mark(self.start, self.character)
 
 def main():
     # Just a testing routine

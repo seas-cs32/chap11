@@ -1,4 +1,5 @@
 ### chap11/wander.py -- Wander through the city's highlights
+from maze import NO_LOC
 from city import CitySqGrid
 from pin import Pin
 
@@ -32,7 +33,7 @@ def wander(my_city, pins):
             return
         
         elif cmd == 'c':
-            best_loc = (-1,-1)    # not a valid location
+            best_loc = NO_LOC     # not a valid location
             best_distance = 100.0 # bigger than any allowable map
 
             # Find the closest highly-rated pin
@@ -42,15 +43,15 @@ def wander(my_city, pins):
                     best_loc = pin.loc
                     best_distance = dist
 
-            assert best_loc != (-1, -1), "Failed to find a pin"
+            assert best_loc != NO_LOC, "Failed to find a pin"
 
             # Teleport to within one step, which requires me to erase
-            # the character from the current cur_loc.
+            # the character from the cur_loc.
             character = my_city.get_mark(cur_loc)
             my_city.mark(cur_loc, ' ')
             cur_loc = (best_loc[0] - 1, best_loc[1] - 1)
             my_city.mark(cur_loc, character)
-            direction = 's'
+            direction = 'n'
 
         else:
             direction = cmd
@@ -65,10 +66,10 @@ def main():
 
     # Add Cosmo's favorite pins to the city map
     pins = [
-        Pin((1,3), "Park", "Lots of squirrels", 5),
-        Pin((3,7), "Fire Hydrant", "Many good smells", 4),
-        Pin((9,5), "Cat", "Not a nice cat!", 1),
-        Pin((11,9), "Bakery", "Free dog treats!", 5)
+        Pin((3,11), "Park", "Lots of squirrels", 5),
+        Pin((7,9), "Fire Hydrant", "Many good smells", 4),
+        Pin((5,3), "Cat", "Not a nice cat!", 1),
+        Pin((9,1), "Bakery", "Free dog treats!", 5)
     ]
     for pin in pins:
         nyc.mark(pin.loc, pin.icon)

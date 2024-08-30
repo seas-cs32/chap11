@@ -26,6 +26,8 @@ def search(my_map):
 
         # DEBUG: Uncomment to watch the frontier grow
         # print(my_map)
+        # print(f'DEBUG: cur_loc = {cur_loc}; moves = {moves}')
+        # print(f'frontier = {frontier}')
         # input('Ready to move on? ')
 
         if len(frontier) == 0:

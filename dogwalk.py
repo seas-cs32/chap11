@@ -16,7 +16,7 @@ def dogwalk(my_city):
     while cur_loc in my_city:
         # Where to? Well, what steps are possible?
         moves = my_city.possible_moves(cur_loc, EXPLORED)
-        # print(f'DEBUG: loc = {loc}; moves = {moves}')
+        # print(f'DEBUG: cur_loc = {cur_loc}; moves = {moves}')
 
         if len(moves) == 0:
             return False   # dead end!

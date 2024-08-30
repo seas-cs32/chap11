@@ -25,7 +25,7 @@ class Pin(object):
         self.name = name
         self.note = note
 
-        assert stars >=0 and stars <=5, "Invalid number of stars"
+        assert stars >= 0 and stars <= 5, "Invalid number of stars"
         self.stars = stars
 
         if self.stars >= 3:
@@ -55,9 +55,9 @@ def main():
 
     # Create some pins and keep track of them in a list
     pins = [
-        Pin((1,3), "Park", "Lots of squirrels", 5),
-        Pin((3,7), "Fire Hydrant", "Many good smells", 4),
-        Pin((9,5), "Cat", "Not a nice cat!", 1),
+        Pin((3,11), "Park", "Lots of squirrels", 5),
+        Pin((7,9), "Fire Hydrant", "Many good smells", 4),
+        Pin((5,3), "Cat", "Not a nice cat!", 1),
     ]
 
     # Add each pin in pins to the city map
@@ -68,7 +68,7 @@ def main():
     print(nyc)
 
     # Add a new pin
-    new_pin = Pin((11,9), "Bakery", "Free dog treats!", 5)
+    new_pin = Pin((9,1), "Bakery", "Free dog treats!", 5)
     pins.append(new_pin)
     nyc.mark(new_pin.loc, new_pin.icon)
     print(f'Added {new_pin}')

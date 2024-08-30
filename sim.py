@@ -31,13 +31,14 @@ def main():
     # Execution defaults
     verbose = False
 
-    # Process any command line arguments
-    blocks = int(sys.argv[1])  # on a side of the square grid; try 4
-    trials = int(sys.argv[2])  # number of simulation runs; try 20
     if len(sys.argv) == 4:
         verbose = True   # Anything in the verbose field works
     elif len(sys.argv) != 3:
         sys.exit("Usage: python3 sim.py blocks trials [verbose]")
+
+    # Process the remaining command line arguments
+    blocks = int(sys.argv[1])  # on a side of the square grid; try 4
+    trials = int(sys.argv[2])  # number of simulation runs; try 20
 
     sim(blocks, trials, verbose)
 
