@@ -43,7 +43,7 @@ def main():
     success = dogwalk(nyc)
     print(nyc)
     if success:
-        print(f'Cosmo is frolicing in the fields!')
+        print(f'Cosmo is frolicking in the fields!')
     else:
         print(f'Cosmo hit a dead-end.')
 

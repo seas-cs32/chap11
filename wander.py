@@ -1,7 +1,7 @@
 ### chap11/wander.py -- Wander through the city's highlights
 from maze import NO_LOC
 from city import CitySqGrid
-from pin import Pin
+from pin import Pin, MAX_DISTANCE
 
 # Our faithful dog
 Cosmo = '\N{DOG FACE}'
@@ -33,8 +33,8 @@ def wander(my_city, pins):
             return
         
         elif cmd == 'c':
-            best_loc = NO_LOC     # not a valid location
-            best_distance = 100.0 # bigger than any allowable map
+            best_loc = NO_LOC            # not a valid location
+            best_distance = MAX_DISTANCE # bigger than any allowable map
 
             # Find the closest highly-rated pin
             for pin in pins:

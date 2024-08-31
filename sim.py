@@ -1,14 +1,14 @@
 ### chap11/sim.py -- Self-avoiding random walk simulation
 import sys
 from city import CitySqGrid
-import dogwalk
+from dogwalk import dogwalk, Cosmo
 
 def sim(blocks, trials, verbose):
     # Initialize the metric of interest
     dead_ends = 0
 
     # Build the specified city
-    my_city = CitySqGrid(blocks, dogwalk.Cosmo)
+    my_city = CitySqGrid(blocks, Cosmo)
     if verbose:
         print(f'\nBuilding a {blocks}x{blocks} city')
         print(my_city)
@@ -18,7 +18,7 @@ def sim(blocks, trials, verbose):
         my_city.reset()
 
         # Run, record, and print the trial
-        success = dogwalk.dogwalk(my_city)
+        success = dogwalk(my_city)
         if not success:
             dead_ends += 1
         if verbose:

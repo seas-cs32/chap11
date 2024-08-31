@@ -10,34 +10,12 @@ class CitySqGrid(maze.Maze):
 
        Interface attributes:
 
-       instance.start: Starting location for your character in the your
-       city.  Locations are (x,y) tuples that specify a coordinate within
-       the city grid.  You should only read this data attribute.
-
-       instance.grid: A 2-dimensional array of cells containing information
-       about the city grid and whatever you might find at each cell.
-       Locations index the cells in a grid.  The location (0,0) is the
-       lower left border corner of the city.  A location tuple acts like
-       an (x,y) coordinate in a Cartesian plane.  See class `Cell` for more
-       information about the city cells.
-
-       move(location, direction): Given a location and a direction to move,
-       this method moves the contents of the input location to the new location
-       n the specified direction, if the direction doesn't hit a wall. If
-       direction is a wall, no move is made.  NOTE: It is up to the caller to
-       guarantee that there's some character to move at location and that the
-       input location is within the city grid.
+       instance.character: User-specified character in the city.
 
        reset(): Resets all the city's state to the state when this
        instance was first created.
 
-       __contains__(pt): Allows us to use the Python `in` syntax to
-       check if a location `pt` is a location in your city grid.
-
-       __str__(): Converts your city object into a string, which when
-       printed is an ASCII representation of what your city looks like.
-
-       print(): Uses `__str__`.
+       The rest of the instance attributes are defined in class Maze.
     """
     # Implementation details:  It only builds cities where there is an
     # intersection at the exact middle of the city.  This means that the

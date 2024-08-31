@@ -296,13 +296,13 @@ class Maze(object):
     
     def reset(self):
         """Resets all cell contents to their original state"""
-        for i in range(self.height + 2):
-            for j in range(self.width + 2):
+        for i in range(self.width + 2):
+            for j in range(self.height + 2):
                 self.mark((i,j), ' ')
         if self.start != NO_LOC:
             self.mark(self.start, 's')
         if self.goal != NO_LOC:
-            self.mark(self.start, 'g')
+            self.mark(self.goal, 'g')
 
     def possible_moves(self, location, visited_character):
         """Given a location and the character that marks previously
@@ -473,6 +473,15 @@ f3a86f5f3aa6
 fff5ff5fffff
 baa6ff3aaaae'''
 MAZE_map_nosoln_endpts = '(1,1) (12,7)'
+
+MAZE_map_ale04 = '''dfdfd9aa8efd
+5f5f12cf5ff5
+386f5f1a4ff5
+f5ff5f5f5ff5
+f3a86f5f3aa6
+fff5ff5fffff
+baa6ff3aaaae'''
+MAZE_map_ale04_endpts = '(12,1) (1,7)'
 
 def main():
     # Just a testing routine

@@ -12,7 +12,6 @@ class TreeNote():
         self.parent = parent  # previous note in path
         self.action = action  # action that got us to this location
 
-
 def search(my_map):
     # Set the current state and mark the map location explored
     cur_loc = my_map.start
@@ -75,7 +74,7 @@ def main():
     my_map = maze.Maze(maze.MAZE_map, maze.MAZE_map_endpts)
     my_map.print()
 
-    print('Starting the search')
+    print('Starting the search\n')
     search(my_map)
 
 if __name__ == '__main__':
