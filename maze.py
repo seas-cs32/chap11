@@ -78,16 +78,16 @@ class Maze(object):
     # implementation of one-way streets.
     #
     # The hardest part of the following implementation is the layout
-    # conflict between the map configuration strings (and the also
+    # conflict between the map configuration strings (and also the
     # top-left-to-bottom-right printing of a map) and the 2D grid that
     # counts from bottom-left-to-top-right. This mismatch makes the
     # implementation of `__init__` and `__str__` tricky.
 
-    def __check_endpts(self, pt):
+    def __check_endpt(self, pt):
         # Hidden helper function for __init__ that verifies that the maze's
         # start and goal are in the maze or on its borders, or they are
         # equal to NO_LOC, which means don't print any character at this
-        # location.  The start and goal points can never be one of the four
+        # location.  The start and goal points shouldn't be one of the four
         # border corners.
         if pt == NO_LOC:
             return
@@ -167,10 +167,10 @@ class Maze(object):
         # Process start and goal endpoints. There should be no spaces except
         # between the two endpoint tuples, e.g., '(1,7) (12,1)'.
         endpts = endpts.split()
-        self.start = eval(endpts[0])
-        self.__check_endpts(self.start)
+        self.start = eval(endpts[0])    # From string to tuple
+        self.__check_endpt(self.start)
         self.goal = eval(endpts[1])
-        self.__check_endpts(self.goal)
+        self.__check_endpt(self.goal)
 
         # Mark the contents of the start and goal points in the grid
         if self.start != NO_LOC:
@@ -287,11 +287,15 @@ class Maze(object):
         """Given a location, put the character there
            in the maze."""
         x, y = location
+        assert x >= 0 and x < self.width + 2, f'bad x in {location}'
+        assert y >= 0 and y < self.height + 2, f'bad y in {location}'
         self.grid[x][y].content = character
 
     def get_mark(self, location):
         """Return the contents of the specified location in the maze"""
         x, y = location
+        assert x >= 0 and x < self.width + 2, f'bad x in {location}'
+        assert y >= 0 and y < self.height + 2, f'bad y in {location}'
         return self.grid[x][y].content
     
     def reset(self):
@@ -310,25 +314,27 @@ class Maze(object):
            this location (i.e., ones that don't hit a wall or return
            you to a previously visited location)."""
         x, y = location
+        assert x >= 0 and x < self.width + 2, f'bad x in {location}'
+        assert y >= 0 and y < self.height + 2, f'bad y in {location}'
         moves = []   # list of possible moves
 
         # Check if we can move North
-        if not self.grid[x][y].northwall \
+        if not self.grid[x][y].northwall and y != self.height + 2 \
         and self.grid[x][y+1].content != visited_character:
             moves.append('n')
 
         # Check if we can move South
-        if not self.grid[x][y].southwall \
+        if not self.grid[x][y].southwall and y != 0 \
         and self.grid[x][y-1].content != visited_character:
             moves.append('s')
 
         # Check if we can move East
-        if not self.grid[x][y].eastwall \
+        if not self.grid[x][y].eastwall and x != self.width + 2 \
         and self.grid[x+1][y].content != visited_character:
             moves.append('e')
 
         # Check if we can move West
-        if not self.grid[x][y].westwall \
+        if not self.grid[x][y].westwall and x != 0 \
         and self.grid[x-1][y].content != visited_character:
             moves.append('w')
 
@@ -354,13 +360,14 @@ class Maze(object):
         m = direction[0].lower()
 
         # For each move possibility, make sure there's no wall there
-        if m == 'n' and not self.grid[x][y].northwall:
+        # and the move won't leave the grid.
+        if m == 'n' and not self.grid[x][y].northwall and y != self.height + 1:
             y += 1
-        if m == 's' and not self.grid[x][y].southwall:
+        if m == 's' and not self.grid[x][y].southwall and y != 0:
             y -= 1
-        if m == 'e' and not self.grid[x][y].eastwall:
+        if m == 'e' and not self.grid[x][y].eastwall and x != self.width + 1:
             x += 1
-        if m == 'w' and not self.grid[x][y].westwall:
+        if m == 'w' and not self.grid[x][y].westwall and x != 0:
             x -= 1
         
         new_loc = (x, y)
