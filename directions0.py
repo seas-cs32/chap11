@@ -34,12 +34,9 @@ def search(my_map):
             print('No solution')
             return
 
-        # Choose a location from the frontier as next to explore
-        next_loc = frontier.pop()
-        my_map.mark(next_loc, EXPLORED)
-
-        # Update current state
-        cur_loc = next_loc
+        # Choose a location from the frontier to explore next
+        cur_loc = frontier.pop()
+        my_map.mark(cur_loc, EXPLORED)
 
     print('Found a solution')
     my_map.print()

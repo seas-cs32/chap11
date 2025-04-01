@@ -43,14 +43,10 @@ def search(my_map):
             print('No solution')
             return
 
-        # Choose a note from the frontier as next to explore
-        next_note = frontier.pop()
-        next_loc = next_note.state
-        my_map.mark(next_loc, EXPLORED)
-
-        # Update current state
-        cur_note = next_note
-        cur_loc = next_loc
+        # Choose a note from the frontier to explore next
+        cur_note = frontier.pop()
+        cur_loc = cur_note.state
+        my_map.mark(cur_loc, EXPLORED)
 
     # Follow the parent links from cur_note to create
     # the actual driving directions
