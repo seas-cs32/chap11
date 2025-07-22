@@ -4,19 +4,19 @@ import math
 # Define useful pin icons and constants
 green_heart = '\u001b[32m\u2665\u001b[0m'
 red_x = '\u001b[31m\u2716\u001b[0m'
-MAX_DISTANCE = 100.0
+MAX_DISTANCE = 100.0    # bigger than any allowable map
 
 class Pin(object):
-    """Abstraction: A Pin object is a mark at a map location `loc`
-       with a `name`, descriptive `note`, and a ranking of 0-5 `stars`.
+    """Abstraction: A Pin object is a mark at a map location loc
+       with a name, descriptive note, and a ranking of 0-5 stars.
        These names are all instance attributes.
 
        instance.icon: The pins displayed icon, which depends upon
-       the pin's number of `stars`.
+       the pin's number of stars.
 
        distance(location): Given a (x,y) location, this method
-       computes and returns the as-the-crow-flies distance from it
-       to this pin's location, but only if this pin is highly rated.
+       computes and returns the as-the-crow-flies distance from
+       this pin's location, but only if this pin is highly rated.
 
        __str__(): Converts the pin into a string.
     """

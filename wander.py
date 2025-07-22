@@ -34,7 +34,7 @@ def wander(my_city, pins):
         
         elif cmd == 'c':
             best_loc = NO_LOC            # not a valid location
-            best_distance = MAX_DISTANCE # bigger than any allowable map
+            best_distance = MAX_DISTANCE
 
             # Find the closest highly-rated pin
             for pin in pins:
@@ -45,8 +45,8 @@ def wander(my_city, pins):
 
             assert best_loc != NO_LOC, "Failed to find a pin"
 
-            # Teleport to within one step, which requires me to erase
-            # the character from the cur_loc.
+            # Teleport to within one step, which requires me to
+            # erase the character from the cur_loc.
             character = my_city.get_mark(cur_loc)
             my_city.mark(cur_loc, ' ')
             cur_loc = (best_loc[0] - 1, best_loc[1] - 1)
